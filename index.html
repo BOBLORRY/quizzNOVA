@@ -762,8 +762,62 @@ h1 {
 
 
 </style>
+
+<!-- Inline Manifest -->
+<script>
+  const manifest = {
+    "name": "quizzNOVA",
+    "short_name": "quizzNOVA",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ff6600",
+    "description": "A fun and interactive quiz game for students. Play and learn with quizzNOVA!",
+    "icons": [
+      {
+        "src": "https://yourdomain.com/icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "https://yourdomain.com/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  };
+
+  const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestURL;
+  document.head.appendChild(link);
+</script>
+
+
 </head>
 <body>
+<!-- Inline Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      self.addEventListener('install', e => console.log('Service Worker installed'));
+      self.addEventListener('activate', e => console.log('Service Worker activated'));
+      self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+    `;
+    
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    const swURL = URL.createObjectURL(swBlob);
+    
+    navigator.serviceWorker.register(swURL)
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.log('Service Worker failed', err));
+  }
+</script>
+
+
+
 <!-- Home Screen -->
 <div id="homeScreen" class="screen active neon-card1">
   <h2>Welcome<br>to 
